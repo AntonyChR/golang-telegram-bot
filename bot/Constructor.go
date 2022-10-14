@@ -11,7 +11,7 @@ type Config struct {
 	BotToken  string
 }
 
-func NewTelegramBot(c Config) (*Bot, error) {
+func New(c Config) (*Bot, error) {
 
 	if err := validateConfig(c); err != nil {
 		return &Bot{}, err
