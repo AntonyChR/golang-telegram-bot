@@ -2,7 +2,7 @@ package bot
 
 type Bot struct {
 	callBacks   map[string]Callback
-	server      *Server
+	server      *server
 	telegramApi *TelegramApi
 	commandDesc map[string]string
 	ch          chan Command
@@ -21,7 +21,7 @@ func (b *Bot) DescribeCommmands(desc map[string]string) {
 
 func (b *Bot) Start() {
 
-	b.telegramApi.registerWebhook()
+	b.telegramApi.RegisterWebhook()
 	b.telegramApi.SetCommandsDescription(b.commandDesc)
 	//b.telegramApi.removeWebhook()
 

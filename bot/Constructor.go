@@ -19,7 +19,7 @@ func NewTelegramBot(c Config) (*Bot, error) {
 
 	commandTransport := make(chan Command)
 
-	httpServer := &Server{
+	httpServer := &server{
 		Port:            c.Port,
 		IncomingCommand: commandTransport,
 	}

@@ -8,12 +8,12 @@ import (
 	"strings"
 )
 
-type Server struct {
+type server struct {
 	Port            string
 	IncomingCommand chan Command
 }
 
-func (s *Server) Start() {
+func (s *server) Start() {
 
 	fmt.Println("[i] Initializating server on: " + s.Port)
 
