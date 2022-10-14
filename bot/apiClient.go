@@ -16,6 +16,13 @@ func (t *TelegramApi) RegisterWebhook() error {
 	fmt.Println(resp)
 	return err
 }
+
+func (t *TelegramApi) RemoveWebhook() error {
+	resp, err := post(t.BaseUrl+"/setWebhook?remove", "application/json", nil)
+	fmt.Println(resp)
+	return err
+}
+
 func (t *TelegramApi) SetCommandsDescription(desc map[string]string) error {
 	if len(desc) == 0 {
 		return nil
@@ -27,14 +34,8 @@ func (t *TelegramApi) SetCommandsDescription(desc map[string]string) error {
 	return err
 }
 
-func (t *TelegramApi) RemoveWebhook() error {
-	resp, err := post(t.BaseUrl+"/setWebhook?remove", "application/json", nil)
-	fmt.Println(resp)
-	return err
-}
-
 func (t *TelegramApi) SendText(text string) {
-
+	_, err := post(t.BaseUrl+"/sendText", "application/json", bytes.NewBuffer([]byte(text)))
 }
 
 func (t *TelegramApi) SendFile(endPoint string, fileType string, fileContent []byte) {
