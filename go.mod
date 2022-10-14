@@ -1,3 +1,3 @@
-module github.com/tl-bot
+module github.com/AntonyChR/tl-bot
 
 go 1.19
