@@ -1,7 +1,7 @@
 package bot
 
 import (
-	"fmt"
+	"errors"
 	"regexp"
 )
 
@@ -41,6 +41,8 @@ func NewTelegramBot(c Config) (*Bot, error) {
 
 func validateConfig(c Config) error {
 	isValidToken, _ := regexp.Match("[0-9]{8,10}:[a-zA-Z0-9_-]{35}", []byte(c.BotToken))
-	fmt.Println(isValidToken)
-	return nil
+	if isValidToken {
+		return nil
+	}
+	return errors.New("[x] Invalid token")
 }
