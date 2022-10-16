@@ -18,6 +18,7 @@ func (t *ApiClient) RegisterWebhook() error {
 }
 
 func (t *ApiClient) RemoveWebhook() error {
+	fmt.Println("[!] Removing webhook...")
 	resp, err := post(t.BaseUrl+"/setWebhook?remove", "application/json", nil)
 	fmt.Println(resp)
 	return err

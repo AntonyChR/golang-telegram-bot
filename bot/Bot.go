@@ -1,5 +1,11 @@
 package bot
 
+import (
+	"os"
+	"os/signal"
+	"syscall"
+)
+
 type Bot struct {
 	cmdCallbacks map[string]CmdCallback
 	server       *server
@@ -26,17 +32,26 @@ func (b *Bot) Start() {
 
 	b.apiClient.RegisterWebhook()
 	b.apiClient.SetCommandsDescription(b.commandDesc)
-	//b.telegramApi.removeWebhook()
 
-	go b.ListenCommands()
+	// Handle termination signal (ctrl-c) 
+	sysChan := make(chan os.Signal)	
+	signal.Notify(sysChan, syscall.SIGINT, syscall.SIGTERM)
+
+	go b.ListenIncommingData(sysChan)
 
 	b.server.Start()
 }
 
-func (b *Bot) ListenCommands() {
-	for command := range b.ch {
-		if _, exists := b.cmdCallbacks[command.Name]; exists {
-			b.cmdCallbacks[command.Name](command)
+func (b *Bot) ListenIncommingData(sysChan chan os.Signal) {
+	for{
+		select{
+		case <- sysChan:
+			b.apiClient.RemoveWebhook()
+			os.Exit(0)
+		case command := <- b.ch:
+			if _, exists := b.cmdCallbacks[command.Name]; exists {
+				b.cmdCallbacks[command.Name](command)
+			}
 		}
 	}
 }
