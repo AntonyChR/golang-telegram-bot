@@ -5,25 +5,25 @@ import (
 	"fmt"
 )
 
-type TelegramApi struct {
+type ApiClient struct {
 	BaseUrl   string
 	EndPoints map[string]string
 	ServerUrl string
 }
 
-func (t *TelegramApi) RegisterWebhook() error {
+func (t *ApiClient) RegisterWebhook() error {
 	resp, err := post(t.BaseUrl+"/setWebhook?url="+t.ServerUrl, "application/json", nil)
 	fmt.Println(resp)
 	return err
 }
 
-func (t *TelegramApi) RemoveWebhook() error {
+func (t *ApiClient) RemoveWebhook() error {
 	resp, err := post(t.BaseUrl+"/setWebhook?remove", "application/json", nil)
 	fmt.Println(resp)
 	return err
 }
 
-func (t *TelegramApi) SetCommandsDescription(desc map[string]string) error {
+func (t *ApiClient) SetCommandsDescription(desc map[string]string) error {
 	if len(desc) == 0 {
 		return nil
 	}
@@ -34,9 +34,10 @@ func (t *TelegramApi) SetCommandsDescription(desc map[string]string) error {
 	return err
 }
 
-func (t *TelegramApi) SendText(text string) {
+func (t *ApiClient) SendText(text string) error {
 	_, err := post(t.BaseUrl+"/sendText", "application/json", bytes.NewBuffer([]byte(text)))
+	return err
 }
 
-func (t *TelegramApi) SendFile(endPoint string, fileType string, fileContent []byte) {
+func (t *ApiClient) SendFile(endPoint string, fileType string, fileContent []byte) {
 }

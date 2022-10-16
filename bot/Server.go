@@ -15,7 +15,7 @@ type server struct {
 
 func (s *server) Start() {
 
-	fmt.Println("[i] Initializating server on: " + s.Port)
+	fmt.Println("[i] Initializating server on: ", s.Port)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
@@ -38,6 +38,7 @@ func getCommand(r *http.Request) (Command, error) {
 	}
 	defer r.Body.Close()
 	var body Body
+
 	err = json.Unmarshal(bodyBytes, &body)
 	if err != nil {
 		return Command{}, err

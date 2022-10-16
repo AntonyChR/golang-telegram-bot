@@ -1,18 +1,21 @@
 package bot
 
 type Bot struct {
-	callBacks   map[string]Callback
-	server      *server
-	apiClient   *ApiClient
-	commandDesc map[string]string
-	ch          chan Command
+	cmdCallbacks map[string]CmdCallback
+	server       *server
+	apiClient    *ApiClient
+	commandDesc  map[string]string
+	ch           chan Command
 }
 
-type Callback func(c Command)
+type CmdCallback func(c Command)
 
 // register command implementation
-func (b *Bot) On(cmd string, callback Callback) {
-	b.callBacks[cmd] = callback
+func (b *Bot) OnCommand(cmd string, callback CmdCallback) {
+	b.cmdCallbacks[cmd] = callback
+}
+func (b *Bot) OnMessage(regExPattern string) {
+
 }
 
 func (b *Bot) DescribeCommmands(desc map[string]string) {
@@ -32,8 +35,8 @@ func (b *Bot) Start() {
 
 func (b *Bot) ListenCommands() {
 	for command := range b.ch {
-		if _, exists := b.callBacks[command.Name]; exists {
-			b.callBacks[command.Name](command)
+		if _, exists := b.cmdCallbacks[command.Name]; exists {
+			b.cmdCallbacks[command.Name](command)
 		}
 	}
 }

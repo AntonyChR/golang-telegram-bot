@@ -24,17 +24,17 @@ func New(c Config) (*Bot, error) {
 		IncomingCommand: commandTransport,
 	}
 
-	apiClient := &TelegramApi{
+	apiClient := &ApiClient{
 		BaseUrl:   "https://api.telegram.org/bot" + c.BotToken,
-		EndPoints: map[string]string{},
+		EndPoints: endpoints(),
 		ServerUrl: c.ServerUrl,
 	}
 
 	bot := Bot{
-		ch:          commandTransport,
-		server:      httpServer,
-		telegramApi: apiClient,
-		callBacks:   make(map[string]Callback),
+		ch:           commandTransport,
+		server:       httpServer,
+		apiClient:    apiClient,
+		cmdCallbacks: make(map[string]CmdCallback),
 	}
 	return &bot, nil
 }
