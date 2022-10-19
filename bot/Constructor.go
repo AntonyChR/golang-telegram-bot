@@ -11,10 +11,10 @@ type Config struct {
 	BotToken  string
 }
 
-func New(c Config) (*Bot,*Responder, error) {
+func New(c Config) (*Bot, *Responder, error) {
 
 	if err := validateConfig(c); err != nil {
-		return &Bot{}, &Responder{},nil
+		return &Bot{}, &Responder{}, nil
 	}
 
 	commandTransport := make(chan Message)
@@ -35,12 +35,11 @@ func New(c Config) (*Bot,*Responder, error) {
 	}
 
 	bot := &Bot{
-		ch:           commandTransport,
-		server:       httpServer,
-		apiClient:    apiClient,
-		cmdCallbacks: make(map[string]CmdCallback),
+		ch:        commandTransport,
+		server:    httpServer,
+		apiClient: apiClient,
 	}
-	return bot,responder,nil 
+	return bot, responder, nil
 }
 
 func validateConfig(c Config) error {

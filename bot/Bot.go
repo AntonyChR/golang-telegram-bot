@@ -1,33 +1,34 @@
 package bot
 
 import (
-	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
 )
 
 type Bot struct {
-	cmdCallbacks map[string]CmdCallback
-	msgCallbacks map[string]CmdCallback
-	server       *server
-	apiClient    *ApiClient
-	commandDesc  map[string]string
-	ch           chan Message
+	server      *server
+	apiClient   *ApiClient
+	commandDesc map[string]string
+	ch          chan Message
+
+	onMessageCb CallBack 
+	callBacksWithRegexp []callBackWithRegexp
 }
 
-type CmdCallback func(m Message)
-
-// register command implementation
-func (b *Bot) OnCommand(cmd string, callback CmdCallback) {
-	b.cmdCallbacks[cmd] = callback
-}
-func (b *Bot) OnAnyTextMessage(callback func(Message)) {
-
+type callBackWithRegexp struct{
+	cb CallBack 
+	pattern string
 }
 
-func (b *Bot) OnMessageWithPattern(regExPattern string, callback func(Message)) {
+type CallBack func(Message)
 
+func (b *Bot) OnMessage(cb CallBack) {
+	b.onMessageCb= cb
+}
+
+func (b *Bot) OnMessageWithRegexp(regExp string, cb CallBack) {
+	b.callBacksWithRegexp = append(b.callBacksWithRegexp, callBackWithRegexp{cb, regExp,})
 }
 
 func (b *Bot) DescribeCommmands(desc map[string]string) {
@@ -37,7 +38,10 @@ func (b *Bot) DescribeCommmands(desc map[string]string) {
 func (b *Bot) Start() {
 
 	b.apiClient.RegisterWebhook()
-	b.apiClient.SetCommandsDescription(b.commandDesc)
+
+	if len(b.commandDesc) > 0 {
+		b.apiClient.SetCommandsDescription(b.commandDesc)
+	}
 
 	// Handle termination signal (ctrl-c)
 	sigTermChan := make(chan os.Signal)
@@ -51,7 +55,9 @@ func (b *Bot) Start() {
 
 func (b *Bot) ListenIncommingMsg() {
 	for message := range b.ch {
-		fmt.Println(message.Text)
+		if b.onMessageCb!= nil {
+			b.onMessageCb(message)
+		}
 	}
 }
 
