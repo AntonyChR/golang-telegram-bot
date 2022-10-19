@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
 )
 
 type server struct {
 	Port            string
-	IncomingCommand chan Command
+	IncomingCommand chan Message
 }
 
 func (s *server) Start() {
@@ -20,7 +19,7 @@ func (s *server) Start() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "POST":
-			command, _ := getCommand(r)
+			command, _ := readMessage(r)
 			s.IncomingCommand <- command
 		default:
 			w.WriteHeader(http.StatusMethodNotAllowed)
@@ -31,24 +30,21 @@ func (s *server) Start() {
 	fmt.Println(err)
 }
 
-func getCommand(r *http.Request) (Command, error) {
+func readMessage(r *http.Request) (Message, error) {
+
 	bodyBytes, err := io.ReadAll(r.Body)
+
 	if err != nil {
-		return Command{}, err
+		return Message{}, err
 	}
+
 	defer r.Body.Close()
+
 	var body Body
 
-	err = json.Unmarshal(bodyBytes, &body)
-	if err != nil {
-		return Command{}, err
+	if err := json.Unmarshal(bodyBytes, &body); err != nil {
+		return Message{}, err
 	}
-	textMessage := strings.Split(body.Message.Text, " ")
-	cmd := Command{
-		Name:             textMessage[0],
-		Params:           textMessage[1:],
-		ChatId:           body.Message.Chat.ID,
-		ReplyToMessageId: body.Message.MessageID,
-	}
-	return cmd, nil
+	message := body.Message
+	return message, nil
 }
