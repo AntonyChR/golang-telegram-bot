@@ -8,19 +8,24 @@ import (
 
 type Bot struct {
 	cmdCallbacks map[string]CmdCallback
+	msgCallbacks map[string]CmdCallback
 	server       *server
 	apiClient    *ApiClient
 	commandDesc  map[string]string
-	ch           chan Command
+	ch           chan Message
 }
 
-type CmdCallback func(c Command)
+type CmdCallback func(m Message)
 
 // register command implementation
 func (b *Bot) OnCommand(cmd string, callback CmdCallback) {
 	b.cmdCallbacks[cmd] = callback
 }
-func (b *Bot) OnMessage(regExPattern string) {
+func (b *Bot) OnAnyTextMessage(callback func(Message)) {
+
+}
+
+func (b *Bot) OnMessageWithPattern(regExPattern string, callback func(Message)) {
 
 }
 
@@ -33,24 +38,25 @@ func (b *Bot) Start() {
 	b.apiClient.RegisterWebhook()
 	b.apiClient.SetCommandsDescription(b.commandDesc)
 
-	// Handle termination signal (ctrl-c) 
-	sysChan := make(chan os.Signal)	
-	signal.Notify(sysChan, syscall.SIGINT, syscall.SIGTERM)
+	// Handle termination signal (ctrl-c)
+	sigTermChan := make(chan os.Signal)
+	signal.Notify(sigTermChan, syscall.SIGINT, syscall.SIGTERM)
 
-	go b.ListenIncommingData(sysChan)
+	go b.ListenEvents(sigTermChan)
 
 	b.server.Start()
 }
 
-func (b *Bot) ListenIncommingData(sysChan chan os.Signal) {
-	for{
-		select{
-		case <- sysChan:
+func (b *Bot) ListenEvents(sigTermChan chan os.Signal) {
+	for {
+		select {
+		case <-sigTermChan:
 			b.apiClient.RemoveWebhook()
 			os.Exit(0)
-		case command := <- b.ch:
-			if _, exists := b.cmdCallbacks[command.Name]; exists {
-				b.cmdCallbacks[command.Name](command)
+		case message := <-b.ch:
+
+			for k, b := range b.msgCallbacks {
+
 			}
 		}
 	}
