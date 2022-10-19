@@ -46,5 +46,6 @@ func readMessage(r *http.Request) (Message, error) {
 		return Message{}, err
 	}
 	message := body.Message
+	message.HasImages = len(message.Photo) > 0
 	return message, nil
 }

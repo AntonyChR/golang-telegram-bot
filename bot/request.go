@@ -1,8 +1,8 @@
 package bot
 
 type Body struct {
-	UpdateID int     `json:"update_id"`
-	Message  Message `json:"message"`
+	UpdateID  int     `json:"update_id"`
+	Message   Message `json:"message"`
 }
 
 type Message struct {
@@ -14,6 +14,8 @@ type Message struct {
 	Photo     []Photo  `json:"photo"`
 	Caption   string   `json:"caption"`
 	Entities  []Entity `json:"entities"`
+
+	HasImages bool
 }
 
 type Chat struct {
