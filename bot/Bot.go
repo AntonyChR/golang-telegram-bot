@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -41,23 +42,21 @@ func (b *Bot) Start() {
 	// Handle termination signal (ctrl-c)
 	sigTermChan := make(chan os.Signal)
 	signal.Notify(sigTermChan, syscall.SIGINT, syscall.SIGTERM)
+	go b.ListenCtrlCSignal(sigTermChan)
 
-	go b.ListenEvents(sigTermChan)
+	go b.ListenIncommingMsg()
 
 	b.server.Start()
 }
 
-func (b *Bot) ListenEvents(sigTermChan chan os.Signal) {
-	for {
-		select {
-		case <-sigTermChan:
-			b.apiClient.RemoveWebhook()
-			os.Exit(0)
-		case message := <-b.ch:
-
-			for k, b := range b.msgCallbacks {
-
-			}
-		}
+func (b *Bot) ListenIncommingMsg() {
+	for message := range b.ch {
+		fmt.Println(message.Text)
 	}
+}
+
+func (b *Bot) ListenCtrlCSignal(sigTermChan chan os.Signal) {
+	<-sigTermChan
+	b.apiClient.RemoveWebhook()
+	os.Exit(0)
 }
