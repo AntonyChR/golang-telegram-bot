@@ -4,6 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
+	"mime/multipart"
+	"net/http"
+	"os"
+	"path"
+	"strconv"
 )
 
 type TextMessage struct {
@@ -47,5 +53,41 @@ func (t *ApiClient) SendText(data TextMessage) error {
 	return err
 }
 
-func (t *ApiClient) SendFile(endPoint string, fileType string, fileContent []byte) {
+func (t *ApiClient) SendFile(fileType string, relativePath string, text TextMessage) error {
+
+	currentDir, _ := os.Getwd()
+	absolutePath := path.Join(currentDir, relativePath)
+
+	file, _ := os.Open(absolutePath)
+	defer file.Close()
+
+	body := bytes.Buffer{}
+	writer := multipart.NewWriter(&body)
+	part, _ := writer.CreateFormFile(fileType, path.Base(file.Name()))
+	io.Copy(part, file)
+
+	writer.WriteField("chat_id", strconv.Itoa(text.ChatID))
+	writer.WriteField("reply_to_message_id", strconv.Itoa(text.ReplyToMessageID))
+	writer.WriteField("caption", text.Text)
+	writer.Close()
+
+	var endpoint string
+
+	switch fileType {
+	case "document":
+		endpoint = "sendDoc"
+	case "photo":
+		endpoint = "sendImg"
+	case "audio":
+		endpoint = "sendAudio"
+	case "video":
+		endpoint = "sendVideo"
+	}
+
+	req, _ := http.NewRequest("POST", t.BaseUrl+t.EndPoints[endpoint], &body)
+	req.Header.Add("Content-Type", writer.FormDataContentType())
+	client := http.Client{}
+	_, err := client.Do(req)
+
+	return err
 }
