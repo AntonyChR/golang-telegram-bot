@@ -3,7 +3,6 @@ package bot
 import (
 	"os"
 	"os/signal"
-	"regexp"
 	"syscall"
 )
 
@@ -24,6 +23,10 @@ type callBackWithRegexp struct {
 
 type CallBack func(Message)
 
+func (b *Bot) DescribeCommmands(desc map[string]string) {
+	b.commandDesc = desc
+}
+
 func (b *Bot) OnMessage(cb CallBack) {
 	b.onMessageCb = cb
 }
@@ -32,8 +35,8 @@ func (b *Bot) OnMessageWithRegexp(regExp string, cb CallBack) {
 	b.callBacksWithRegexp = append(b.callBacksWithRegexp, callBackWithRegexp{cb, regExp})
 }
 
-func (b *Bot) DescribeCommmands(desc map[string]string) {
-	b.commandDesc = desc
+func (b *Bot) OnCommand(cmd string, cb CallBack) {
+
 }
 
 func (b *Bot) Start() {
@@ -59,16 +62,6 @@ func (b *Bot) listenIncommingMsg() {
 
 		if b.onMessageCb != nil {
 			b.onMessageCb(message)
-		}
-
-		if len(b.callBacksWithRegexp) > 0 {
-			for _, cb := range b.callBacksWithRegexp {
-				isMatch, _ := regexp.Match(cb.pattern, []byte(message.Text))
-				if isMatch {
-					continue
-				}
-				cb.cb(message)
-			}
 		}
 	}
 }
