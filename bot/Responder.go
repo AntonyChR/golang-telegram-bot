@@ -7,18 +7,28 @@ type Responder struct {
 type Content struct {
 	Text string
 	Type string
-	Data []byte
+	Path string
 }
 
 func (r *Responder) Reply(m Message, c Content) {
-	if c.Type == "" || c.Type == "text" {
-		data := TextMessage{
-			ChatID:           m.Chat.ID,
-			ReplyToMessageID: m.MessageID,
-			Text:             c.Text,
-		}
-		r.apiService.SendText(data)
+
+	data := TextMessage{
+		ChatID:           m.Chat.ID,
+		ReplyToMessageID: m.MessageID,
+		Text:             c.Text,
 	}
+
+	if c.Path == "" {
+		r.apiService.SendText(data)
+		return
+	}
+
+	typeFile := "document"
+
+	if c.Type != "" {
+		typeFile = c.Type
+	}
+	r.apiService.SendFile(typeFile, c.Path, data)
 }
 
 func (r *Responder) SendToChat(chatId int, c Content) {
