@@ -1,1 +1,1 @@
-# Golang Telgram API client
+# Golang Telegram API client
