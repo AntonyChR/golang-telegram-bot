@@ -19,8 +19,7 @@ type ApiClient struct {
 }
 
 func (t *ApiClient) RegisterWebhook() error {
-	resp, err := post(t.BaseUrl+t.EndPoints["setWebhook"]+t.ServerUrl, "application/json", nil)
-	fmt.Println(resp)
+	_, err := post(t.BaseUrl+t.EndPoints["setWebhook"]+t.ServerUrl, "application/json", nil)
 	return err
 }
 
