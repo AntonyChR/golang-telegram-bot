@@ -3,6 +3,7 @@ package bot
 import (
 	"os"
 	"os/signal"
+	"regexp"
 	"syscall"
 )
 
@@ -12,23 +13,23 @@ type Bot struct {
 	commandDesc map[string]string
 	ch          chan Message
 
-	onMessageCb CallBack 
+	onMessageCb         CallBack
 	callBacksWithRegexp []callBackWithRegexp
 }
 
-type callBackWithRegexp struct{
-	cb CallBack 
+type callBackWithRegexp struct {
+	cb      CallBack
 	pattern string
 }
 
 type CallBack func(Message)
 
 func (b *Bot) OnMessage(cb CallBack) {
-	b.onMessageCb= cb
+	b.onMessageCb = cb
 }
 
 func (b *Bot) OnMessageWithRegexp(regExp string, cb CallBack) {
-	b.callBacksWithRegexp = append(b.callBacksWithRegexp, callBackWithRegexp{cb, regExp,})
+	b.callBacksWithRegexp = append(b.callBacksWithRegexp, callBackWithRegexp{cb, regExp})
 }
 
 func (b *Bot) DescribeCommmands(desc map[string]string) {
@@ -46,22 +47,33 @@ func (b *Bot) Start() {
 	// Handle termination signal (ctrl-c)
 	sigTermChan := make(chan os.Signal)
 	signal.Notify(sigTermChan, syscall.SIGINT, syscall.SIGTERM)
-	go b.ListenCtrlCSignal(sigTermChan)
+	go b.listenCtrlCSignal(sigTermChan)
 
-	go b.ListenIncommingMsg()
+	go b.listenIncommingMsg()
 
 	b.server.Start()
 }
 
-func (b *Bot) ListenIncommingMsg() {
+func (b *Bot) listenIncommingMsg() {
 	for message := range b.ch {
-		if b.onMessageCb!= nil {
+
+		if b.onMessageCb != nil {
 			b.onMessageCb(message)
+		}
+
+		if len(b.callBacksWithRegexp) > 0 {
+			for _, cb := range b.callBacksWithRegexp {
+				isMatch, _ := regexp.Match(cb.pattern, []byte(message.Text))
+				if isMatch {
+					continue
+				}
+				cb.cb(message)
+			}
 		}
 	}
 }
 
-func (b *Bot) ListenCtrlCSignal(sigTermChan chan os.Signal) {
+func (b *Bot) listenCtrlCSignal(sigTermChan chan os.Signal) {
 	<-sigTermChan
 	b.apiClient.RemoveWebhook()
 	os.Exit(0)
