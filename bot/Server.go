@@ -33,12 +33,11 @@ func (s *server) Start() {
 func readMessage(r *http.Request) (Message, error) {
 
 	bodyBytes, err := io.ReadAll(r.Body)
+	defer r.Body.Close()
 
 	if err != nil {
 		return Message{}, err
 	}
-
-	defer r.Body.Close()
 
 	var body Body
 
