@@ -31,8 +31,7 @@ func (t *ApiClient) RegisterWebhook() error {
 
 func (t *ApiClient) RemoveWebhook() error {
 	fmt.Println("[!] Removing webhook...")
-	resp, err := post(t.BaseUrl+t.EndPoints["removeWebhook"], "application/json", nil)
-	fmt.Println(resp)
+	_, err := post(t.BaseUrl+t.EndPoints["removeWebhook"], "application/json", nil)
 	return err
 }
 
@@ -40,10 +39,9 @@ func (t *ApiClient) SetCommandsDescription(desc map[string]string) error {
 	if len(desc) == 0 {
 		return nil
 	}
-	fmt.Println("[i] Adding command description")
+	fmt.Println("[*] Adding command description")
 	objBytes := commandDesc2json(desc)
-	resp, err := post(t.BaseUrl+t.EndPoints["setCommands"], "application/json", bytes.NewBuffer(objBytes))
-	fmt.Println(resp)
+	_, err := post(t.BaseUrl+t.EndPoints["setCommands"], "application/json", bytes.NewBuffer(objBytes))
 	return err
 }
 
@@ -87,7 +85,9 @@ func (t *ApiClient) SendFile(fileType string, relativePath string, text TextMess
 	req, _ := http.NewRequest("POST", t.BaseUrl+t.EndPoints[endpoint], &body)
 	req.Header.Add("Content-Type", writer.FormDataContentType())
 	client := http.Client{}
-	_, err := client.Do(req)
-
+	resp, err := client.Do(req)
+	if resp.StatusCode != http.StatusOK {
+		fmt.Println(resp)
+	}
 	return err
 }
