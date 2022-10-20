@@ -17,11 +17,11 @@ func New(c Config) (*Bot, *Responder, error) {
 		return &Bot{}, &Responder{}, nil
 	}
 
-	commandTransport := make(chan Message)
+	msgTransport := make(chan Message)
 
 	httpServer := &server{
 		Port:            c.Port,
-		IncomingCommand: commandTransport,
+		IncomingMessage: msgTransport,
 	}
 
 	apiClient := &ApiClient{
@@ -35,9 +35,9 @@ func New(c Config) (*Bot, *Responder, error) {
 	}
 
 	bot := &Bot{
-		ch:        commandTransport,
-		server:    httpServer,
-		apiClient: apiClient,
+		msgTransport: msgTransport,
+		server:       httpServer,
+		apiClient:    apiClient,
 	}
 	return bot, responder, nil
 }

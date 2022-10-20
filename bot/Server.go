@@ -9,7 +9,7 @@ import (
 
 type server struct {
 	Port            string
-	IncomingCommand chan Message
+	IncomingMessage chan Message
 }
 
 func (s *server) Start() {
@@ -19,8 +19,8 @@ func (s *server) Start() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "POST":
-			command, _ := readMessage(r)
-			s.IncomingCommand <- command
+			message, _ := readMessage(r)
+			s.IncomingMessage <- message
 		default:
 			w.WriteHeader(http.StatusMethodNotAllowed)
 			w.Write([]byte(`{"message": "Can't find method requested"}`))

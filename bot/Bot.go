@@ -8,10 +8,10 @@ import (
 )
 
 type Bot struct {
-	server      *server
-	apiClient   *ApiClient
-	commandDesc map[string]string
-	ch          chan Message
+	server       *server
+	apiClient    *ApiClient
+	commandDesc  map[string]string
+	msgTransport chan Message
 
 	onMessageCb         CallBack
 	callBacksWithRegexp []callBackWithRegexp
@@ -55,7 +55,7 @@ func (b *Bot) Start() {
 }
 
 func (b *Bot) listenIncommingMsg() {
-	for message := range b.ch {
+	for message := range b.msgTransport {
 
 		if b.onMessageCb != nil {
 			b.onMessageCb(message)
