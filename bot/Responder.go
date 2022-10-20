@@ -11,15 +11,21 @@ type Content struct {
 }
 
 func (r *Responder) Reply(m Message, c Content) {
-
-	data := TextMessage{
+	r.sendMessage(TextMessage{
 		ChatID:           m.Chat.ID,
 		ReplyToMessageID: m.MessageID,
 		Text:             c.Text,
-	}
+	}, c)
+}
+
+func (r *Responder) SendToChat(chatId int, c Content) {
+	r.sendMessage(TextMessage{ChatID: chatId, Text: c.Text}, c)
+}
+
+func (r *Responder) sendMessage(textFields TextMessage, c Content) {
 
 	if c.Path == "" {
-		r.apiService.SendText(data)
+		r.apiService.SendText(textFields)
 		return
 	}
 
@@ -28,9 +34,6 @@ func (r *Responder) Reply(m Message, c Content) {
 	if c.Type != "" {
 		typeFile = c.Type
 	}
-	r.apiService.SendFile(typeFile, c.Path, data)
-}
+	r.apiService.SendFile(typeFile, c.Path, textFields)
 
-func (r *Responder) SendToChat(chatId int, c Content) {
-	r.apiService.SendText(TextMessage{ChatID: chatId, Text: c.Text})
 }
