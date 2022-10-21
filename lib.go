@@ -2,7 +2,6 @@ package bot
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 )
@@ -29,7 +28,6 @@ func commandDesc2json(m map[string]string) []byte {
 }
 
 func post(url string, contentType string, content io.Reader) (string, error) {
-	fmt.Println(url)
 	resp, err := http.Post(url, contentType, content)
 	if err != nil {
 		return "", err

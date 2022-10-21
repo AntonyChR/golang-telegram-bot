@@ -26,7 +26,7 @@ func New(c Config) (*Bot, *Responder, error) {
 
 	apiClient := &ApiClient{
 		BaseUrl:   "https://api.telegram.org/bot" + c.BotToken,
-		EndPoints: endpoints(),
+		EndPoints: endpoints,
 		ServerUrl: c.ServerUrl,
 	}
 
@@ -40,6 +40,7 @@ func New(c Config) (*Bot, *Responder, error) {
 		apiClient:    apiClient,
 		commands:     make(map[string]CallBack),
 	}
+
 	return bot, responder, nil
 }
 
