@@ -14,8 +14,6 @@ type server struct {
 
 func (s *server) Start() {
 
-	fmt.Println("[i] Initializating server on: ", s.Port)
-
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "POST":
@@ -26,8 +24,13 @@ func (s *server) Start() {
 			w.Write([]byte(`{"message": "Can't find method requested"}`))
 		}
 	})
+
 	err := http.ListenAndServe(":"+s.Port, nil)
-	fmt.Println(err)
+
+	if err == nil {
+		fmt.Println("[*] Listen messages on: ", s.Port)
+	}
+
 }
 
 func readMessage(r *http.Request) (Message, error) {
