@@ -3,6 +3,7 @@ package bot
 import (
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 )
 
@@ -11,14 +12,8 @@ type Bot struct {
 	apiClient    *ApiClient
 	commandDesc  map[string]string
 	msgTransport chan Message
-
-	onMessageCb         CallBack
-	callBacksWithRegexp []callBackWithRegexp
-}
-
-type callBackWithRegexp struct {
-	cb      CallBack
-	pattern string
+	commands     map[string]CallBack
+	onMessageCb  CallBack
 }
 
 type CallBack func(Message)
@@ -31,14 +26,12 @@ func (b *Bot) OnMessage(cb CallBack) {
 	b.onMessageCb = cb
 }
 
-func (b *Bot) OnMessageWithRegexp(regExp string, cb CallBack) {
-	b.callBacksWithRegexp = append(b.callBacksWithRegexp, callBackWithRegexp{cb, regExp})
-}
-
 func (b *Bot) OnCommand(cmd string, cb CallBack) {
-
+	b.commands[cmd] = cb
 }
 
+// Register webhook and initilize http server to
+// listen incomming messages.
 func (b *Bot) Start() {
 
 	b.apiClient.RegisterWebhook()
@@ -63,6 +56,23 @@ func (b *Bot) listenIncommingMsg() {
 		if b.onMessageCb != nil {
 			b.onMessageCb(message)
 		}
+
+		if len(b.commands) == 0 {
+			continue
+		}
+
+		text := strings.Split(message.Text, " ")
+
+		if text[0] == "" {
+			continue
+		}
+
+		cmd := text[0]
+
+		if _, exists := b.commands[cmd]; exists {
+			b.commands[cmd](message)
+		}
+
 	}
 }
 
