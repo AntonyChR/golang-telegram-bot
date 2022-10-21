@@ -1,4 +1,4 @@
-package bot
+package gtb
 
 var endpoints = map[string]string{
 	"setWebhook":    "/setWebhook?url=",

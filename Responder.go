@@ -1,13 +1,13 @@
-package bot
+package gtb
 
 type Responder struct {
 	apiService *ApiClient
 }
 
 type Msg struct {
-	Text string
-	Type string
-	Path string
+	Text string // (*optional)
+	Type string // (*optional) "document" | "photo" | "audio" | "video"
+	Path string // (*optional) Relative file path
 }
 
 func (r *Responder) Reply(m Message, c Msg) {

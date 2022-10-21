@@ -1,4 +1,4 @@
-package bot
+package gtb
 
 import (
 	"encoding/json"
@@ -25,10 +25,10 @@ func (s *server) Start() {
 		}
 	})
 
+	fmt.Println("[*] Listening for messages on port: ", s.Port)
 	err := http.ListenAndServe(":"+s.Port, nil)
-
-	if err == nil {
-		fmt.Println("[*] Listen messages on: ", s.Port)
+	if err != nil {
+		fmt.Println(err.Error())
 	}
 
 }

@@ -1,10 +1,12 @@
-package bot
+package gtb
 
+// Types of incoming telegram request
 type Body struct {
 	UpdateID int     `json:"update_id"`
 	Message  Message `json:"message"`
 }
 
+// Message data
 type Message struct {
 	MessageID int      `json:"message_id"`
 	From      From     `json:"from"`
