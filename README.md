@@ -40,7 +40,7 @@ func main() {
 
 	myBot.OnMessage(func(m gtb.Message) {
 		fmt.Println(m.Text)
-		responder.Reply(m, gtb.Msg{Text: "Thi es a text message"})
+		responder.Reply(m, gtb.Msg{Text: "This is a text message"})
 	})
 
 	myBot.Start()
