@@ -38,6 +38,7 @@ func New(c Config) (*Bot, *Responder, error) {
 		msgTransport: msgTransport,
 		server:       httpServer,
 		apiClient:    apiClient,
+		commands:     make(map[string]CallBack),
 	}
 	return bot, responder, nil
 }
