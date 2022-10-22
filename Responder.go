@@ -10,6 +10,7 @@ type Msg struct {
 	Path string // (*optional) Relative file path
 }
 
+// Reply by tagging the sender of the message
 func (r *Responder) Reply(m Message, c Msg) {
 	r.sendMessage(TextMessage{
 		ChatID:           m.Chat.ID,
@@ -18,6 +19,7 @@ func (r *Responder) Reply(m Message, c Msg) {
 	}, c)
 }
 
+// Send message to the chat with the specified id (chatId)
 func (r *Responder) SendToChat(chatId int, c Msg) {
 	r.sendMessage(TextMessage{ChatID: chatId, Text: c.Text}, c)
 }
