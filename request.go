@@ -14,10 +14,11 @@ type Message struct {
 	Date      int      `json:"date"`
 	Text      string   `json:"text"`
 	Photo     []Photo  `json:"photo"`
+	Video     Video    `json:"video"`
+	Voice     Voice    `json:"voice"`
+	Audio     Audio    `json:"audio"`
 	Caption   string   `json:"caption"`
 	Entities  []Entity `json:"entities"`
-
-	HasImages bool
 }
 
 type Chat struct {
@@ -36,13 +37,62 @@ type From struct {
 type Photo struct {
 	FileID       string `json:"file_id"`
 	FileUniqueID string `json:"file_unique_id"`
-	FileSize     int64  `json:"file_size"`
-	Width        int64  `json:"width"`
-	Height       int64  `json:"height"`
+	FileSize     int    `json:"file_size"`
+	Width        int    `json:"width"`
+	Height       int    `json:"height"`
+}
+
+type Video struct {
+	Duration     int    `json:"duration"`
+	Width        int    `json:"width"`
+	Height       int    `json:"height"`
+	MIMEType     string `json:"mime_type"`
+	Thumb        Thumb  `json:"thumb"`
+	FileID       string `json:"file_id"`
+	FileUniqueID string `json:"file_unique_id"`
+	FileSize     int    `json:"file_size"`
+}
+
+type Voice struct {
+	Duration     int    `json:"duration"`
+	MIMEType     string `json:"mime_type"`
+	FileID       string `json:"file_id"`
+	FileUniqueID string `json:"file_unique_id"`
+	FileSize     int    `json:"file_size"`
+}
+
+type Audio struct {
+	Duration     int    `json:"duration"`
+	FileName     string `json:"file_name"`
+	MIMEType     string `json:"mime_type"`
+	FileID       string `json:"file_id"`
+	FileUniqueID string `json:"file_unique_id"`
+	FileSize     int    `json:"file_size"`
+}
+
+type Document struct {
+	FileName     string `json:"file_name"`
+	MIMEType     string `json:"mime_type"`
+	FileID       string `json:"file_id"`
+	Thumb        Thumb  `json:"thumb"`
+	FileUniqueID string `json:"file_unique_id"`
+	FileSize     int    `json:"file_size"`
+}
+
+type Thumb struct {
+	FileID       string `json:"file_id"`
+	FileUniqueID string `json:"file_unique_id"`
+	FileSize     int    `json:"file_size"`
+	Width        int    `json:"width"`
+	Height       int    `json:"height"`
 }
 
 type Entity struct {
-	Offset int64  `json:"offset"`
-	Length int64  `json:"length"`
+	Offset int    `json:"offset"`
+	Length int    `json:"length"`
 	Type   string `json:"type"`
+}
+
+func (m *Message) HasImages() bool {
+	return len(m.Photo) > 0
 }
