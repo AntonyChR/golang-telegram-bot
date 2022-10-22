@@ -93,6 +93,22 @@ type Entity struct {
 	Type   string `json:"type"`
 }
 
-func (m *Message) HasImages() bool {
-	return len(m.Photo) > 0
+// Check if the message contains:
+//
+//	typeFile = photo | video | audio | voice | document
+//
+// if file type is not specified hasFile(""), all types are searched
+func (m *Message) HasFile(typeFile string) bool {
+	switch typeFile {
+	case "photo":
+		return len(m.Photo) > 0
+	case "video":
+		return m.Video.FileID != ""
+	case "audio":
+		return m.Audio.FileID != ""
+	case "voice":
+		return m.Voice.FileID != ""
+	default:
+		return false
+	}
 }
