@@ -17,7 +17,7 @@ func (s *server) Start() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "POST":
-			message, _ := readMessage(r)
+			message, _ := readMessageFromRequest(r)
 			s.IncomingMessage <- message
 		default:
 			w.WriteHeader(http.StatusMethodNotAllowed)
@@ -33,11 +33,12 @@ func (s *server) Start() {
 
 }
 
-func readMessage(r *http.Request) (Message, error) {
+func readMessageFromRequest(r *http.Request) (Message, error) {
 
 	bodyBytes, err := io.ReadAll(r.Body)
 	defer r.Body.Close()
 
+	fmt.Println(string(bodyBytes))
 	if err != nil {
 		return Message{}, err
 	}
@@ -47,7 +48,8 @@ func readMessage(r *http.Request) (Message, error) {
 	if err := json.Unmarshal(bodyBytes, &body); err != nil {
 		return Message{}, err
 	}
+
 	message := body.Message
-	message.HasImages = len(message.Photo) > 0
+
 	return message, nil
 }
