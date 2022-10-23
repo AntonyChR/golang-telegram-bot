@@ -11,4 +11,5 @@ var endpoints = map[string]string{
 	"sendImg":   "/sendPhoto",
 	"sendAudio": "/sendAudio",
 	"sendDoc":   "/sendDocument",
+	"getFile":   "/getFile",
 }

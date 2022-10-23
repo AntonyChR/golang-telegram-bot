@@ -21,6 +21,7 @@ type TextMessage struct {
 type ApiClient struct {
 	BaseUrl   string
 	EndPoints map[string]string
+	Files     string
 	ServerUrl string
 }
 
@@ -89,5 +90,53 @@ func (t *ApiClient) SendFile(fileType string, relativePath string, text TextMess
 	if resp.StatusCode != http.StatusOK {
 		fmt.Println(resp)
 	}
+	return err
+}
+
+type File struct {
+	Ok     bool   `json:"ok"`
+	Result Result `json:"result"`
+}
+
+type Result struct {
+	FileID       string `json:"file_id"`
+	FileUniqueID string `json:"file_unique_id"`
+	FileSize     int64  `json:"file_size"`
+	FilePath     string `json:"file_path"`
+}
+
+// Get basic information about a file and prepare it for downloading
+func (t *ApiClient) GetFileInfo(fileId string) File {
+
+	dataBytes, _ := json.Marshal(map[string]string{"file_id": fileId})
+
+	resp, _ := post(t.BaseUrl+t.EndPoints["getFile"], "application/json", bytes.NewBuffer(dataBytes))
+
+	var fileData File
+
+	_ = json.Unmarshal(resp, &fileData)
+
+	return fileData
+
+}
+
+func (t *ApiClient) downloadFile(path string, dir string) error {
+
+	file, err := os.Create(dir)
+	if err != nil {
+		return err
+	}
+
+	defer file.Close()
+
+	resp, err := http.Get(t.Files + "/" + path)
+	if err != nil {
+		return err
+	}
+
+	defer resp.Body.Close()
+
+	_, err = io.Copy(file, resp.Body)
+
 	return err
 }
