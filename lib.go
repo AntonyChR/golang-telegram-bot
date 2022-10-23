@@ -27,15 +27,22 @@ func commandDesc2json(m map[string]string) []byte {
 	return objBytes
 }
 
-func post(url string, contentType string, content io.Reader) (string, error) {
+func postJSON(url string, content io.Reader) ([]byte, error) {
+
+	contentType := "application/json"
 	resp, err := http.Post(url, contentType, content)
+
 	if err != nil {
-		return "", err
+		return []byte{}, err
 	}
+
 	defer resp.Body.Close()
+
 	bodyBytes, err := io.ReadAll(resp.Body)
+
 	if err != nil {
-		return "", err
+		return []byte{}, err
 	}
-	return string(bodyBytes), nil
+
+	return bodyBytes, nil
 }
