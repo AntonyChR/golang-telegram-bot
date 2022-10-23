@@ -73,6 +73,18 @@ func (r *Responder) Reply(m bot.Message, c bot.Msg)
 //Send message to specific chat
 func (r *Responder) SendToChat(chatId int, c bot.Msg)
 
+// Download and save file in:
+// dir/{file_type}-{file_name}-{file_unique_id}.{ext}
+func (r *Responder) SendToChat(chatId int, c bot.Msg) error
+
+// Example
+	myBot.OnMessage(func(m gtb.Message) {
+		err := r.DownloadFile(m.Photo[2].FileID, "./images/")
+		if err != nil {
+			fmt.Println("Error downloading file")
+		}
+	})
+
 ```
 
 ## Types
