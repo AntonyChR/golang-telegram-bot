@@ -75,7 +75,7 @@ func (r *Responder) SendToChat(chatId int, c bot.Msg)
 
 // Download and save file in:
 // dir/{file_type}-{file_name}-{file_unique_id}.{ext}
-func (r *Responder) SendToChat(chatId int, c bot.Msg) error
+func (r *Responder) DownloadFile(fileId string, dir string) error
 
 // Example
 	myBot.OnMessage(func(m gtb.Message) {
