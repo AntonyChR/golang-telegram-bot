@@ -26,13 +26,13 @@ type ApiClient struct {
 }
 
 func (t *ApiClient) RegisterWebhook() error {
-	_, err := post(t.BaseUrl+t.EndPoints["setWebhook"]+t.ServerUrl, "application/json", nil)
+	_, err := postJSON(t.BaseUrl+t.EndPoints["setWebhook"]+t.ServerUrl, nil)
 	return err
 }
 
 func (t *ApiClient) RemoveWebhook() error {
 	fmt.Println("[!] Removing webhook...")
-	_, err := post(t.BaseUrl+t.EndPoints["removeWebhook"], "application/json", nil)
+	_, err := postJSON(t.BaseUrl+t.EndPoints["removeWebhook"], nil)
 	return err
 }
 
@@ -42,13 +42,13 @@ func (t *ApiClient) SetCommandsDescription(desc map[string]string) error {
 	}
 	fmt.Println("[*] Adding command description")
 	objBytes := commandDesc2json(desc)
-	_, err := post(t.BaseUrl+t.EndPoints["setCommands"], "application/json", bytes.NewBuffer(objBytes))
+	_, err := postJSON(t.BaseUrl+t.EndPoints["setCommands"], bytes.NewBuffer(objBytes))
 	return err
 }
 
 func (t *ApiClient) SendText(data TextMessage) error {
 	dataBytes, _ := json.Marshal(data)
-	_, err := post(t.BaseUrl+t.EndPoints["sendText"], "application/json", bytes.NewBuffer([]byte(dataBytes)))
+	_, err := postJSON(t.BaseUrl+t.EndPoints["sendText"], bytes.NewBuffer([]byte(dataBytes)))
 	return err
 }
 
@@ -110,7 +110,7 @@ func (t *ApiClient) GetFileInfo(fileId string) File {
 
 	dataBytes, _ := json.Marshal(map[string]string{"file_id": fileId})
 
-	resp, _ := post(t.BaseUrl+t.EndPoints["getFile"], "application/json", bytes.NewBuffer(dataBytes))
+	resp, _ := postJSON(t.BaseUrl+t.EndPoints["getFile"], bytes.NewBuffer(dataBytes))
 
 	var fileData File
 
