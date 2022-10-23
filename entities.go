@@ -13,7 +13,7 @@ type Message struct {
 	Chat      Chat     `json:"chat"`
 	Date      int      `json:"date"`
 	Text      string   `json:"text"`
-	Photo     []Photo  `json:"photo"`
+	Photo     []Photo  `json:"photo"` //index 2 item is the highest resolution
 	Video     Video    `json:"video"`
 	Voice     Voice    `json:"voice"`
 	Audio     Audio    `json:"audio"`
