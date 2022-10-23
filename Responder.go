@@ -1,5 +1,10 @@
 package gtb
 
+import (
+	"errors"
+	"strings"
+)
+
 type Responder struct {
 	apiService *ApiClient
 }
@@ -37,5 +42,24 @@ func (r *Responder) sendMessage(textFields TextMessage, c Msg) {
 		typeFile = c.Type
 	}
 	r.apiService.SendFile(typeFile, c.Path, textFields)
+
+}
+
+// Download and save file in:
+//
+//	dir/{file_type}-{file_name}-{file_unique_id}.{ext}
+func (r *Responder) DownloadFile(fileId string, dir string) error {
+	file := r.apiService.GetFileInfo(fileId)
+
+	pathWithoutSlash := strings.ReplaceAll(file.Result.FilePath, "/", "-")
+	fileName := strings.ReplaceAll(pathWithoutSlash, ".", "-"+file.Result.FileUniqueID+".")
+
+	if !file.Ok {
+		return errors.New("is not posible get info about file")
+	}
+
+	err := r.apiService.downloadFile(file.Result.FilePath, dir+fileName)
+
+	return err
 
 }
