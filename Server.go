@@ -38,7 +38,6 @@ func readMessageFromRequest(r *http.Request) (Message, error) {
 	bodyBytes, err := io.ReadAll(r.Body)
 	defer r.Body.Close()
 
-	fmt.Println(string(bodyBytes))
 	if err != nil {
 		return Message{}, err
 	}
