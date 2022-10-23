@@ -26,6 +26,7 @@ func New(c Config) (*Bot, *Responder, error) {
 
 	apiClient := &ApiClient{
 		BaseUrl:   "https://api.telegram.org/bot" + c.BotToken,
+		Files:     "https://api.telegram.org/file/bot" + c.BotToken,
 		EndPoints: endpoints,
 		ServerUrl: c.ServerUrl,
 	}
