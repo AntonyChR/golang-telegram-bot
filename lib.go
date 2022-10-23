@@ -29,8 +29,7 @@ func commandDesc2json(m map[string]string) []byte {
 
 func postJSON(url string, content io.Reader) ([]byte, error) {
 
-	contentType := "application/json"
-	resp, err := http.Post(url, contentType, content)
+	resp, err := http.Post(url, "application/json", content)
 
 	if err != nil {
 		return []byte{}, err
