@@ -13,7 +13,10 @@ type Bot struct {
 	commandDesc  map[string]string
 	msgTransport chan Message
 	commands     map[string]CallBack
-	onMessageCb  CallBack
+
+	onMessage        CallBack
+	onNewChatMember  CallBack
+	onLeftChatMember CallBack
 }
 
 type CallBack func(Message)
@@ -23,11 +26,19 @@ func (b *Bot) DescribeCommmands(desc map[string]string) {
 }
 
 func (b *Bot) OnMessage(cb CallBack) {
-	b.onMessageCb = cb
+	b.onMessage = cb
 }
 
 func (b *Bot) OnCommand(cmd string, cb CallBack) {
 	b.commands[cmd] = cb
+}
+
+func (b *Bot) OnNewMemberChat(cb CallBack) {
+	b.onNewChatMember = cb
+}
+
+func (b *Bot) OnLeftMemberChat(cb CallBack) {
+	b.onLeftChatMember = cb
 }
 
 // Register webhook and initilize http server to
@@ -53,8 +64,15 @@ func (b *Bot) Start() {
 func (b *Bot) listenIncommingMsg() {
 	for message := range b.msgTransport {
 
-		if b.onMessageCb != nil {
-			b.onMessageCb(message)
+		if b.onMessage != nil {
+			b.onMessage(message)
+		}
+
+		if b.onNewChatMember != nil && message.NewChatMember.FirstName != "" {
+			b.onNewChatMember(message)
+		}
+		if b.onLeftChatMember != nil && message.LeftChatMember.FirstName != "" {
+			b.onLeftChatMember(message)
 		}
 
 		if len(b.commands) == 0 {
