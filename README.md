@@ -61,6 +61,21 @@ func (b *Bot) OnMessage(func(m gtb.Message))
 
 //Listen command
 func(b *Bot) OnCommand(cmd string, func(m gtb.Message))
+
+func (b *Bot) OnLeftMemberChat(func(m gtb.Message)
+
+// Example
+	myBot.OnLeftMemberChat(func(m gtb.Message) {
+		fmt.Println(m.LeftChatMember.FirstName, " has left the chat")
+
+	})
+
+func (b *Bot) OnNewMemberChat(func(m gtb.Message)
+
+// Example
+	myBot.OnNewMemberChat(func(m gtb.Message) {
+		fmt.Println(m.NewChatMember.FirstName, " has joined the chat.")
+	})
 ```
 ## gtb.Responder methods
 
