@@ -19,6 +19,9 @@ type Message struct {
 	Audio     Audio    `json:"audio"`
 	Caption   string   `json:"caption"`
 	Entities  []Entity `json:"entities"`
+
+	NewChatMember  ChatMember `json:"new_chat_member"`
+	LeftChatMember ChatMember `json:"left_chat_member"`
 }
 
 type Chat struct {
@@ -91,6 +94,13 @@ type Entity struct {
 	Offset int    `json:"offset"`
 	Length int    `json:"length"`
 	Type   string `json:"type"`
+}
+
+type ChatMember struct {
+	ID        int    `json:"id"`
+	IsBot     bool   `json:"is_bot"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
 }
 
 // Check if the message contains:
