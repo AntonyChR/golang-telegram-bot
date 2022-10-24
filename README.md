@@ -104,7 +104,7 @@ func (r *Responder) DownloadFile(fileId string, dir string) error
 
 ## Types
 
-[gtl.Message](https://github.com/AntonyChR/golang-telegram-bot/blob/main/request.go): Incoming message data
+[gtl.Message](https://github.com/AntonyChR/golang-telegram-bot/blob/main/entities.go#L10): Incoming message data
 
 [gtl.Msg](https://github.com/AntonyChR/golang-telegram-bot/blob/main/Responder.go#L7): Data to send message
 ```golang
