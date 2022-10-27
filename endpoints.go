@@ -12,4 +12,6 @@ var endpoints = map[string]string{
 	"sendAudio": "/sendAudio",
 	"sendDoc":   "/sendDocument",
 	"getFile":   "/getFile",
+	"ban":       "/banChatMember",
+	"unban":     "/unbanChatMember",
 }
