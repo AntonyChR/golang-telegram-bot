@@ -143,8 +143,7 @@ func (t *ApiClient) downloadFile(path string, dir string) error {
 
 func (t *ApiClient) banChatMember(userData map[string]any) error {
 	dataBytes, _ := json.Marshal(userData)
-	bt, err := postJSON(t.BaseUrl+t.EndPoints["ban"], bytes.NewBuffer(dataBytes))
-	fmt.Println(string(bt))
+	_, err := postJSON(t.BaseUrl+t.EndPoints["ban"], bytes.NewBuffer(dataBytes))
 	return err
 }
 
