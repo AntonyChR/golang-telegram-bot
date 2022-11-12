@@ -73,9 +73,9 @@ func (b *Bot) OnLeftMemberChat(func(m gtb.Message)
 func (b *Bot) OnNewMemberChat(func(m gtb.Message)
 
 // Example
-	myBot.OnNewMemberChat(func(m gtb.Message) {
-		fmt.Println(m.NewChatMember.FirstName, " has joined the chat.")
-	})
+myBot.OnNewMemberChat(func(m gtb.Message) {
+	fmt.Println(m.NewChatMember.FirstName, " has joined the chat.")
+})
 ```
 ## gtb.Responder methods
 
@@ -93,12 +93,12 @@ func (r *Responder) SendToChat(chatId int, c bot.Msg)
 func (r *Responder) DownloadFile(fileId string, dir string) error
 
 // Example
-	myBot.OnMessage(func(m gtb.Message) {
-		err := r.DownloadFile(m.Photo[2].FileID, "./images/")
-		if err != nil {
-			fmt.Println("Error downloading file")
-		}
-	})
+myBot.OnMessage(func(m gtb.Message) {
+	err := r.DownloadFile(m.Photo[2].FileID, "./images/")
+	if err != nil {
+		fmt.Println("Error downloading file")
+	}
+})
 
 ```
 
