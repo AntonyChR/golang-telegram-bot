@@ -100,6 +100,28 @@ myBot.OnMessage(func(m gtb.Message) {
 	}
 })
 
+// Ban chat member
+// until can be specified with the following formats
+//
+//	minutes: "1m", "2m",..."nm"
+//	hours: "1h", "2h",..."nh"
+//	until specific date: "dd/mm/yy"
+//
+// If user is banned for more than 366 days or less than 30 seconds from the
+// current time they are considered to be banned forever.
+// https://core.telegram.org/bots/api#banchatmember
+func (r *Responder) Ban(chaId int, userId int, until string) error
+
+// Example
+myBot.OnMessage(func(m gtb.Message) {
+	if m.Text == "forbidden phrase" {
+		r.Reply(m, gtb.Msg{Text: "your message has prohibited content, you will be banned from the group."})
+		r.Ban(m.Chat.ID, m.From.ID, "1m") // banned
+	}
+})
+
+// Unban chat member
+func (r *Responder) Unban(chaId int, userId int) error
 ```
 
 ## Types
