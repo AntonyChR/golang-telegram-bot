@@ -36,12 +36,22 @@ func (t *ApiClient) RemoveWebhook() error {
 	return err
 }
 
+type obj map[string]string
+
 func (t *ApiClient) SetCommandsDescription(desc map[string]string) error {
 	if len(desc) == 0 {
 		return nil
 	}
 	fmt.Println("[*] Adding command description")
-	objBytes := commandDesc2json(desc)
+	var commands []obj
+	for k, v := range desc {
+		commands = append(commands, obj{"command": k, "description": v})
+	}
+	description := map[string][]obj{
+		"commands": commands,
+	}
+	objBytes, _ := json.Marshal(description)
+	fmt.Println(string(objBytes))
 	_, err := postJSON(t.BaseUrl+t.EndPoints["setCommands"], bytes.NewBuffer(objBytes))
 	return err
 }
