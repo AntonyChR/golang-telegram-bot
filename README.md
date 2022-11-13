@@ -5,6 +5,13 @@
 go get https://github.com/AntonyChR/golang-telegram-bot
 ```
 
+## Configuration
+
+The struct gtb.Config has thre fields
+- Port: port on which the server listens for requests
+- ServerUrl: url of the server where the bot is running,url of the server where the bot is running, you can use heroku or any host provider, you can also use Ngrok as shown in the example below
+- BotToken:  visit this [link](https://core.telegram.org/bots/tutorial#obtain-your-bot-token) to get your api token through [Bot Father](https://t.me/botfather)
+
 ## Example
 
 ```golang
