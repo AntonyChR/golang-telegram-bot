@@ -51,7 +51,7 @@ func (t *ApiClient) SetCommandsDescription(desc map[string]string) error {
 		"commands": commands,
 	}
 	objBytes, _ := json.Marshal(description)
-	fmt.Println(string(objBytes))
+
 	_, err := postJSON(t.BaseUrl+t.EndPoints["setCommands"], bytes.NewBuffer(objBytes))
 	return err
 }
