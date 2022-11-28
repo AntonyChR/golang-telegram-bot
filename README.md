@@ -134,6 +134,24 @@ func (r *Responder) Unban(chaId int, userId int) error
 ## Types
 
 [gtl.Message](https://github.com/AntonyChR/golang-telegram-bot/blob/main/entities.go#L10): Incoming message data
+```golang
+type Message struct {
+	MessageID int      `json:"message_id"`
+	From      From     `json:"from"`
+	Chat      Chat     `json:"chat"`
+	Date      int      `json:"date"`
+	Text      string   `json:"text"`
+	Photo     []Photo  `json:"photo"` //index 2 item is the highest resolution
+	Video     Video    `json:"video"`
+	Voice     Voice    `json:"voice"`
+	Audio     Audio    `json:"audio"`
+	Caption   string   `json:"caption"`
+	Entities  []Entity `json:"entities"`
+
+	NewChatMember  ChatMember `json:"new_chat_member"`
+	LeftChatMember ChatMember `json:"left_chat_member"`
+}
+```
 
 [gtl.Msg](https://github.com/AntonyChR/golang-telegram-bot/blob/main/Responder.go#L7): Data to send message
 ```golang
