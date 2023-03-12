@@ -36,15 +36,17 @@ func main() {
 	myBot.DescribeCommmands(map[string]string{
 		"info": "Get info about bot",
 	})
-
+	
+	// listens for the /info command and responds with a text
 	myBot.OnCommand("/info", func(m gtb.Message) {
 		responder.SendToChat(
 			m.Chat.ID,
 			gtb.Msg{
-				Text: "Name: Bot\nVersion: 1.2.1\nActive: True",
+				Text: "Hello I'm a bot :),
 			})
 	})
-
+	
+	// lsten to any message
 	myBot.OnMessage(func(m gtb.Message) {
 		fmt.Println(m.Text)
 		responder.Reply(m, gtb.Msg{Text: "This is a text message"})
