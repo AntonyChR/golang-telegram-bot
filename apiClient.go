@@ -10,6 +10,7 @@ import (
 	"os"
 	"path"
 	"strconv"
+	"strings"
 )
 
 type TextMessage struct {
@@ -64,10 +65,16 @@ func (t *ApiClient) SendText(data TextMessage) error {
 
 func (t *ApiClient) SendFile(fileType string, relativePath string, text TextMessage) error {
 
-	currentDir, _ := os.Getwd()
-	absolutePath := path.Join(currentDir, relativePath)
+	absPath := relativePath
+	if strings.Contains(relativePath, "~/") {
+		userHomeDir, _ := os.UserHomeDir()
+		absPath = strings.ReplaceAll(relativePath, "~/", userHomeDir+"/")
+	}
 
-	file, _ := os.Open(absolutePath)
+	file, err := os.Open(absPath)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 	defer file.Close()
 
 	body := bytes.Buffer{}
