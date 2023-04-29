@@ -58,7 +58,7 @@ func (t *ApiClient) SetCommandsDescription(desc map[string]string) error {
 
 func (t *ApiClient) SendText(data TextMessage) error {
 	dataBytes, _ := json.Marshal(data)
-	_, err := postJSON(t.BaseUrl+t.EndPoints["sendText"], bytes.NewBuffer([]byte(dataBytes)))
+	_, err := postJSON(t.BaseUrl+t.EndPoints["sendText"], bytes.NewBuffer(dataBytes))
 	return err
 }
 
