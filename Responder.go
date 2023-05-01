@@ -58,7 +58,7 @@ func (r *Responder) sendMessage(textFields TextMessage, c Msg) {
 // If user is banned for more than 366 days or less than 30 seconds from the
 // current time they are considered to be banned forever.
 // https://core.telegram.org/bots/api#banchatmember
-func (r *Responder) Ban(chaId int, userId int, until string) error {
+func (r *Responder) Ban(chatId int, userId int, until string) error {
 
 	minutesRegex := regexp.MustCompile(`[1-9]{1,}m`)
 	hoursRegex := regexp.MustCompile(`[1-9]{1,}h`)
@@ -86,7 +86,7 @@ func (r *Responder) Ban(chaId int, userId int, until string) error {
 	}
 
 	userData := map[string]any{
-		"chat_id":    chaId,
+		"chat_id":    chatId,
 		"user_id":    userId,
 		"until_date": unixDate,
 	}
@@ -95,9 +95,9 @@ func (r *Responder) Ban(chaId int, userId int, until string) error {
 	return err
 }
 
-func (r *Responder) Unban(chaId int, userId int) error {
+func (r *Responder) Unban(chatId int, userId int) error {
 	userData := map[string]int{
-		"chat_id": chaId,
+		"chat_id": chatId,
 		"user_id": userId,
 	}
 	err := r.apiService.unbanChatMember(userData)

@@ -119,7 +119,7 @@ myBot.OnMessage(func(m gtb.Message) {
 // If user is banned for more than 366 days or less than 30 seconds from the
 // current time they are considered to be banned forever.
 // https://core.telegram.org/bots/api#banchatmember
-func (r *Responder) Ban(chaId int, userId int, until string) error
+func (r *Responder) Ban(chatId int, userId int, until string) error
 
 // Example
 myBot.OnMessage(func(m gtb.Message) {
@@ -130,7 +130,7 @@ myBot.OnMessage(func(m gtb.Message) {
 })
 
 // Unban chat member
-func (r *Responder) Unban(chaId int, userId int) error
+func (r *Responder) Unban(chatId int, userId int) error
 ```
 
 ## Types
