@@ -15,13 +15,26 @@ type server struct {
 func (s *server) Start() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "POST":
-			message, _ := readMessageFromRequest(r)
-			s.IncomingMessage <- message
-		default:
+
+		if r.Method != http.MethodPost {
 			w.WriteHeader(http.StatusMethodNotAllowed)
-			w.Write([]byte(`{"message": "Can't find method requested"}`))
+			w.Write([]byte(fmt.Sprintf(`{"message": "Method %s not allowed for this endpoint"}`, r.Method)))
+			return
+		}
+
+		message, err := readMessageFromRequest(r)
+
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(fmt.Sprintf(`{"message": "Error reading message: %s"}`, err.Error())))
+			return
+		}
+
+		select {
+		case s.IncomingMessage <- message:
+			w.WriteHeader(http.StatusAccepted)
+		default:
+			w.WriteHeader(http.StatusServiceUnavailable)
 		}
 	})
 
