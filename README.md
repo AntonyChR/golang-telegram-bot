@@ -42,7 +42,7 @@ func main() {
 		responder.SendToChat(
 			m.Chat.ID,
 			gtb.Msg{
-				Text: "Hello I'm a bot :),
+				Text: "Hello I'm a bot :)",
 			})
 	})
 	
