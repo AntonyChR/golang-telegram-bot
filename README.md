@@ -46,7 +46,7 @@ func main() {
 			})
 	})
 	
-	// lsten to any message
+	// listen to any message
 	myBot.OnMessage(func(m gtb.Message) {
 		fmt.Println(m.Text)
 		responder.Reply(m, gtb.Msg{Text: "This is a text message"})
