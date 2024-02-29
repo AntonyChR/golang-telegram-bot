@@ -61,6 +61,8 @@ func (b *Bot) Start() {
 	b.server.Start()
 }
 
+// main method
+
 func (b *Bot) listenIncommingMsg() {
 	for message := range b.msgTransport {
 
