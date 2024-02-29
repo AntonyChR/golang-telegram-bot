@@ -11,7 +11,8 @@ import (
 func GetThumbnailVideo(videoPath string) (string, error) {
 	basePath := strings.TrimSuffix(filepath.Base(videoPath), filepath.Ext(videoPath))
 	imagePath := basePath + ".jpg"
-	command := fmt.Sprintf("ffmpeg -i %s -vframes 1 -an -s 320x320 -ss 0 %s", videoPath, imagePath)
+	//command := fmt.Sprintf("ffmpeg -i %s -vframes 1 -an -s 320x320 -ss 0 %s", videoPath, imagePath)
+	command := fmt.Sprintf("ffmpeg -i %s -vframes 1 -an -ss 0 %s", videoPath, imagePath)
 	cmd := exec.Command("bash", "-c", command)
 	err := cmd.Run()
 
