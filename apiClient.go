@@ -63,7 +63,7 @@ func (t *ApiClient) SendText(data TextMessage) error {
 	return err
 }
 
-func (t *ApiClient) SendFile(fileType string, relativePath string, text TextMessage) error {
+func (t *ApiClient) SendFile(fileType string, relativePath string, message TextMessage) error {
 
 	absPath := relativePath
 	if strings.Contains(relativePath, "~/") {
@@ -82,9 +82,9 @@ func (t *ApiClient) SendFile(fileType string, relativePath string, text TextMess
 	part, _ := writer.CreateFormFile(fileType, path.Base(file.Name()))
 	io.Copy(part, file)
 
-	writer.WriteField("chat_id", strconv.Itoa(text.ChatID))
-	writer.WriteField("reply_to_message_id", strconv.Itoa(text.ReplyToMessageID))
-	writer.WriteField("caption", text.Text)
+	writer.WriteField("chat_id", strconv.Itoa(message.ChatID))
+	writer.WriteField("reply_to_message_id", strconv.Itoa(message.ReplyToMessageID))
+	writer.WriteField("caption", message.Text)
 	writer.Close()
 
 	var endpoint string

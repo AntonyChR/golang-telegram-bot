@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// generates a video thumbnail and returns the path of the jpg file
 func GetThumbnailVideo(videoPath string) (string, error) {
 	basePath := strings.TrimSuffix(filepath.Base(videoPath), filepath.Ext(videoPath))
 	imagePath := basePath + ".jpg"
@@ -22,6 +23,7 @@ func GetThumbnailVideo(videoPath string) (string, error) {
 	return imagePath, nil
 }
 
+// return video duration in seconds
 func GetVideoDuration(path string) (int, error) {
 	command := fmt.Sprintf("ffprobe -i %s -show_entries format=duration -v quiet -of csv=\"p=0\"", path)
 	out, err := exec.Command("bash", "-c", command).Output()
