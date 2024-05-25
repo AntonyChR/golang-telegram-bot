@@ -57,6 +57,8 @@ func readMessageFromRequest(r *http.Request) (Message, error) {
 
 	var body Body
 
+	fmt.Println(string(bodyBytes))
+
 	if err := json.Unmarshal(bodyBytes, &body); err != nil {
 		return Message{}, err
 	}

@@ -2,8 +2,9 @@ package gtb
 
 // Types of incoming telegram request
 type Body struct {
-	UpdateID int     `json:"update_id"`
-	Message  Message `json:"message"`
+	UpdateID    int         `json:"update_id"`
+	Message     Message     `json:"message"`
+	ChannelPost ChannelPost `json:"channel_post"`
 }
 
 // Message data
@@ -23,11 +24,19 @@ type Message struct {
 	NewChatMember  ChatMember `json:"new_chat_member"`
 	LeftChatMember ChatMember `json:"left_chat_member"`
 }
+type ChannelPost struct {
+	MessageID  int64  `json:"message_id"`
+	SenderChat Chat   `json:"sender_chat"`
+	Chat       Chat   `json:"chat"`
+	Date       int64  `json:"date"`
+	Text       string `json:"text"`
+}
 
 type Chat struct {
 	ID        int    `json:"id"`
 	FirstName string `json:"first_name"`
 	Type      string `json:"type"`
+	Title     string `json:"title"`
 }
 
 type From struct {
